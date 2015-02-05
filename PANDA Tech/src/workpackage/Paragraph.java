@@ -22,12 +22,12 @@ public class Paragraph extends BookElement
 	}
 	/**
 	 * Paragraph's constructor
-	 * @param name
+	 * @param title
 	 * 				the name of this paragraph
 	 */
-	public Paragraph(String name)
+	public Paragraph(String title)
 	{
-		super(name);
+		super(title);
 	}
 	/**
 	 * Returns contents of this paragraph

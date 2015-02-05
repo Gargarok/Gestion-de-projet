@@ -27,12 +27,12 @@ public class Chapter extends BookElement
 	}
 	/**
 	 * Chapter's constructor
-	 * @param name
+	 * @param title
 	 *   		   the name of this chapter
 	 */
-	public Chapter(String name)
+	public Chapter(String title)
 	{
-		super(name);
+		super(title);
 	}
 	/**
 	 * Returns a Paragraph of this chapter

@@ -25,12 +25,12 @@ public class Book extends BookElement {
 	}
 	/**
 	 * Book's constructor
-	 * @param name
+	 * @param title
 	 * 			   the name of this book
 	 */
-	public Book(String name)
+	public Book(String title)
 	{
-		super(name);
+		super(title);
 	}
 	/**
 	 * Returns a Volume of this book

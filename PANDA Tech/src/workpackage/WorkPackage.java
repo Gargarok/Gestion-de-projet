@@ -1,5 +1,8 @@
 package workpackage;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.security.acl.NotOwnerException;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -38,14 +41,17 @@ public class WorkPackage
 	 * creation date of this workpackage
 	 */
 	private Date date_create;
+	private String path_validate;
+	private String path_to_validate;
 	/**
 	 * WorkPackage's default constructor
 	 * <p>
 	 * While WorkPackage's construction, a book is created in this WorkPackage
 	 * </p>
 	 */
+
 	
-	public WorkPackage()
+	public WorkPackage(String path_to_validate,String path_validate)
 	{
 		Book b=new Book();
 		elements.put(b.getId(), b);
@@ -66,7 +72,7 @@ public class WorkPackage
 	 * 				   IDs of elements contained in the WorkPackage wp which will be created in this WorkPackage
 	 * 
 	 */
-	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems)
+	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems, String path_to_validate,String path_validate)
 	{
 		state="NONVALID";
 		date_create = new Date(System.currentTimeMillis());
@@ -100,8 +106,13 @@ public class WorkPackage
 	public int size(){return elements.size();}
 	/**
 	 * Validate this WorkPackage
+	 * @throws IOException path_to_validate or path_validate not exist
 	 */
-	public void validate(){state="VALID";}
+	public void validate() throws IOException{
+		state="VALID";
+		for(BookElement e:elements.values())
+			Files.copy(new File(path_to_validate+File.separator+e.getTitle()).toPath(),new File(path_validate+File.separator+e.getTitle()).toPath() );
+	}
 	/**
 	 * Indicates if this WorkPackage is validated
 	 * 

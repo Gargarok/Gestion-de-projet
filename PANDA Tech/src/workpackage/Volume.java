@@ -27,12 +27,12 @@ public class Volume extends BookElement
 	}
 	/**
 	 * Volume's constructor
-	 * @param name
+	 * @param title
 	 *  			the name of this volume
 	 */
-	public Volume(String name)
+	public Volume(String title)
 	{
-		super(name);
+		super(title);
 	}
 	/**
 	 * Returns a Chapter of this volume
