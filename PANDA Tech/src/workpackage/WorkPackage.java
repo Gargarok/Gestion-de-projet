@@ -1,6 +1,7 @@
 package workpackage;
 
 import java.security.acl.NotOwnerException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Map;
  * 
  * @see BookElement
  * @author Karine Siette
- * @version 1.0
+ * @version 1.1
  */
 
 public class WorkPackage 
@@ -22,24 +23,35 @@ public class WorkPackage
 	 */
 	private Map<Long,BookElement> elements=new HashMap<>();
 	/**
-	 *  shows if this WorkPackage was validated
+	 *  the state of this WorkPackage, can be: VALID, WAITFORVALID, NONVALID
 	 */
-	private boolean validate=false;
+	private String state;
 	/**
 	 * ID of the person who can change this WorkPackage
 	 */
 	private long id_rw=-1;
-	
+	/**
+	 * the name of this WorkPackage
+	 */
+	private String name;
+	/**
+	 * creation date of this workpackage
+	 */
+	private Date date_create;
 	/**
 	 * WorkPackage's default constructor
 	 * <p>
 	 * While WorkPackage's construction, a book is created in this WorkPackage
 	 * </p>
 	 */
+	
 	public WorkPackage()
 	{
 		Book b=new Book();
 		elements.put(b.getId(), b);
+		state="NONVALID";
+		date_create = new Date(System.currentTimeMillis());
+		
 	}
 	/**
 	 * WorkPackage's constructor
@@ -48,12 +60,17 @@ public class WorkPackage
 	 * </p>
 	 * @param wp
 	 * 			 The WorkPackage from which we will build this WorkPackage
+	 * @param name 
+	 * 				the name of this WorkPackage
 	 * @param id_elems
 	 * 				   IDs of elements contained in the WorkPackage wp which will be created in this WorkPackage
 	 * 
 	 */
-	public WorkPackage(WorkPackage wp,List<Long> id_elems)
+	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems)
 	{
+		state="NONVALID";
+		date_create = new Date(System.currentTimeMillis());
+		this.name=name;
 		for(long id :id_elems)
 		{
 			BookElement elem=wp.getItem(id);
@@ -84,14 +101,14 @@ public class WorkPackage
 	/**
 	 * Validate this WorkPackage
 	 */
-	public void validate(){validate=true;}
+	public void validate(){state="VALID";}
 	/**
 	 * Indicates if this WorkPackage is validated
 	 * 
 	 * @return true if this WorkPackage is validated, else false 
 	 */
 	
-	public boolean isValidate(){return validate;}
+	public boolean isValidate(){return state.equals("VALID");}
 	/**
 	 * Add a Volume in a book of this WorkPackage
 	 * @param id_book

@@ -29,26 +29,27 @@ public abstract class BookElement {
 	/**
 	 * name of the element
 	 */
-	private String name;
+	private String title;
 	/**
 	 * BookElement's default constructor
 	 * <p>
 	 * At the end of the construction, nb is incremented
 	 * </p>
 	 */
+	
 	protected BookElement(){
 		id=nb;
 		nb++;
 	}
 	/**
 	 * BookElement's constructor
-	 * @param name
+	 * @param title
 	 * 			   the name of this element
 	 */
-	protected BookElement(String name){
+	protected BookElement(String title){
 		id=nb;
 		nb++;
-		this.name=name;
+		this.title=title;
 	}
 	/**
 	 * Return the ID of this element
@@ -57,8 +58,8 @@ public abstract class BookElement {
 	public long getId(){return id;}
 	/**
 	 * Return the name of this element
-	 * @return name
+	 * @return title
 	 */
-	public String getName(){return name;}
+	public String getTitle(){return title;}
 
 }

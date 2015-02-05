@@ -24,7 +24,7 @@ public class WPTest {
 	public void testWorkPackageWorkPackageListOfLongNull() 
 	{
 		WorkPackage wp=new WorkPackage();
-		WorkPackage wp2=new WorkPackage(wp,null);
+		WorkPackage wp2=new WorkPackage("wp1",wp,null);
 		
 	}
 	@Test
@@ -32,10 +32,10 @@ public class WPTest {
 	{
 		WorkPackage wp=new WorkPackage();
 		ArrayList<Long> l=new ArrayList<>();
-		WorkPackage wp2=new WorkPackage(wp,l);
+		WorkPackage wp2=new WorkPackage("wp1",wp,l);
 		assertTrue(wp2.size()==0);
 		l.add(BookElement.nb-1);
-		wp2=new WorkPackage(wp,l);
+		wp2=new WorkPackage("wp2",wp,l);
 		assertTrue(wp2.size()==1);
 	}
 	@Test(expected=IllegalArgumentException.class)
@@ -44,7 +44,7 @@ public class WPTest {
 		WorkPackage wp=new WorkPackage();
 		ArrayList<Long> l=new ArrayList<>();
 		l.add(-1555L);
-		WorkPackage wp2=new WorkPackage(wp,l);		
+		WorkPackage wp2=new WorkPackage("wp1",wp,l);		
 	}
 	@Test
 	public void testValidate() 
