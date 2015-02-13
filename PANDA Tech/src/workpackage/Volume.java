@@ -1,5 +1,6 @@
 package workpackage;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,9 +31,9 @@ public class Volume extends BookElement
 	 * @param title
 	 *  			the name of this volume
 	 */
-	public Volume(String title)
+	public Volume(String title,String path)
 	{
-		super(title);
+		super(title,path);
 	}
 	/**
 	 * Returns a Chapter of this volume
@@ -51,9 +52,11 @@ public class Volume extends BookElement
 	 *  		   the chapter to add
 	 * @see Chapter
 	 */
-	public void add(Chapter chap)
+	public Chapter add(String title)
 	{
+		Chapter chap=new Chapter(title,this.getPath()+File.separator+this.getTitle());
 		chapters.put(chap.getId(), chap);
+		return chap;
 	}
 
 }

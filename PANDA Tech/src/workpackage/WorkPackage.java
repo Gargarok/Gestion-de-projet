@@ -41,6 +41,8 @@ public class WorkPackage
 	 * creation date of this workpackage
 	 */
 	private Date date_create;
+	private long id;
+	private long nb;
 	private String path_validate;
 	private String path_to_validate;
 	/**
@@ -51,12 +53,23 @@ public class WorkPackage
 	 */
 
 	
-	public WorkPackage(String path_to_validate,String path_validate)
+	public WorkPackage(String name, String title, String path_to_validate,String path_validate,ServerRequest serv_req)
 	{
-		Book b=new Book();
+		Book b=new Book(title,name);
+		id=nb;
+		nb++;
 		elements.put(b.getId(), b);
 		state="NONVALID";
 		date_create = new Date(System.currentTimeMillis());
+		serv_req.createFolder(path_to_validate,name);
+		serv_req.createFolder(path_validate,name);
+		String query="Insert into WorkPackage VALUES("+id+","+name+","+date_create+","+state+");";
+		serv_req.executeQuery(query);
+		query="INSERT INTO BookElement VALUES("+b.getId()+","+b.getTitle()+","+id_rw+","+path_validate+File.separator+b.getPath()+","+path_to_validate+File.separator+b.getPath()+","+state+","+id+");";
+		serv_req.executeQuery(query);
+		query="INSERT INTO Book VALUES("+b.getId()+",NULL);";
+		serv_req.executeQuery(query);
+
 		
 	}
 	/**
@@ -72,11 +85,13 @@ public class WorkPackage
 	 * 				   IDs of elements contained in the WorkPackage wp which will be created in this WorkPackage
 	 * 
 	 */
-	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems, String path_to_validate,String path_validate)
+	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems, String path_to_validate,String path_validate,ServerRequest serv_req)
 	{
 		state="NONVALID";
 		date_create = new Date(System.currentTimeMillis());
 		this.name=name;
+		id=nb;
+		nb++;
 		for(long id :id_elems)
 		{
 			BookElement elem=wp.getItem(id);
@@ -84,6 +99,10 @@ public class WorkPackage
 			elements.put(id, elem);
 			
 		}
+		serv_req.createFolder(path_to_validate,name);
+		serv_req.createFolder(path_validate,name);
+		String query="Insert into WorkPackage VALUES("+id+","+name+","+date_create+","+state+");";
+		serv_req.executeQuery(query);
 		
 	}
 	/**
@@ -108,10 +127,12 @@ public class WorkPackage
 	 * Validate this WorkPackage
 	 * @throws IOException path_to_validate or path_validate not exist
 	 */
-	public void validate() throws IOException{
+	public void validate(ServerRequest serv_req) throws IOException{
 		state="VALID";
 		for(BookElement e:elements.values())
 			Files.copy(new File(path_to_validate+File.separator+e.getTitle()).toPath(),new File(path_validate+File.separator+e.getTitle()).toPath() );
+		String query="UPDATE WorkPackage SET state="+state+" WHERE wp_id="+id+";";
+		serv_req.executeQuery(query);
 	}
 	/**
 	 * Indicates if this WorkPackage is validated
@@ -133,15 +154,17 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage
 	 */
-	public void addVolume(long id_book,String name_vol, long id_user) throws NotOwnerException
+	public void addVolume(long id_book,String name_vol, long id_user,ServerRequest serv_req) throws NotOwnerException
 	{
 		
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Book b=(Book) getItem(id_book);
 		if(b==null) throw new IllegalArgumentException();
-		Volume vol=new Volume(name_vol);
-		b.add(vol);
-		
+		Volume v=b.add(name_vol);
+		String query="INSERT INTO BookElement VALUES("+v.getId()+","+v.getTitle()+","+id_rw+","+path_validate+File.separator+v.getPath()+","+path_to_validate+File.separator+v.getPath()+","+state+","+id+");";
+		serv_req.executeQuery(query);
+		query="INSERT INTO Volume VALUES("+v.getId()+",NULL,"+id_book+");";
+		serv_req.executeQuery(query);
 		
 	}
 	/**
@@ -157,13 +180,16 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the volume's ID is not in this WorkPackage
 	 */
-	public void addChapter(long id_vol, String name_chap, long id_user) throws NotOwnerException
+	public void addChapter(long id_vol, String name_chap, long id_user,ServerRequest serv_req) throws NotOwnerException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Volume vol=(Volume) getItem(id_vol);
 		if(vol==null) throw new IllegalArgumentException();
-		Chapter chap=new Chapter(name_chap);
-		vol.add(chap);
+		Chapter c=vol.add(name_chap);
+		String query="INSERT INTO BookElement VALUES("+c.getId()+","+c.getTitle()+","+id_rw+","+path_validate+File.separator+c.getPath()+","+path_to_validate+File.separator+c.getPath()+","+state+","+id+");";
+		serv_req.executeQuery(query);
+		query="INSERT INTO Chapter VALUES("+c.getId()+",NULL,"+id_vol+");";
+		serv_req.executeQuery(query);
 		
 	}
 	/**
@@ -182,15 +208,18 @@ public class WorkPackage
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage or the volume's ID is not in the book
 	 */
 	
-	public void addChapter(long id_book,long id_vol,String name_chap, long id_user) throws NotOwnerException
+	public void addChapter(long id_book,long id_vol,String name_chap, long id_user,ServerRequest serv_req) throws NotOwnerException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Book b=(Book) getItem(id_book);
 		if(b==null) throw new IllegalArgumentException();
 		Volume vol= b.getItem(id_vol);
 		if(vol==null) throw new IllegalArgumentException();
-		Chapter chap=new Chapter(name_chap);
-		vol.add(chap);
+		Chapter c=vol.add(name_chap);
+		String query="INSERT INTO BookElement VALUES("+c.getId()+","+c.getTitle()+","+id_rw+","+path_validate+File.separator+c.getPath()+","+path_to_validate+File.separator+c.getPath()+","+state+","+id+");";
+		serv_req.executeQuery(query);
+		query="INSERT INTO Chapter VALUES("+c.getId()+",NULL,"+id_vol+");";
+		serv_req.executeQuery(query);
 		
 	}
 	/**
@@ -206,13 +235,16 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the chapter's ID is not in this WorkPackage
 	 */
-	public void addParagraph(long id_chap, String name_paragraph, long id_user) throws NotOwnerException
+	public void addParagraph(long id_chap, String name_paragraph, long id_user,ServerRequest serv_req) throws NotOwnerException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Chapter chap=(Chapter) getItem(id_chap);
 		if(chap==null) throw new IllegalArgumentException();
-		Paragraph p=new Paragraph(name_paragraph);
-		chap.add(p);
+		Paragraph p=chap.add(name_paragraph);
+		String query="INSERT INTO BookElement VALUES("+p.getId()+","+p.getTitle()+","+id_rw+","+path_validate+File.separator+p.getPath()+","+path_to_validate+File.separator+p.getPath()+","+state+","+id+");";
+		serv_req.executeQuery(query);
+		query="INSERT INTO Paragraph VALUES("+p.getId()+",NULL,"+id_chap+");";
+		serv_req.executeQuery(query);
 		
 	}
 	/**
@@ -232,7 +264,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage or the volume's ID is not in the book or the chapter's ID is not in the volume
 	 */
-	public void addParagraph(long id_book,long id_vol,long id_chap, String name_paragraph, long id_user) throws NotOwnerException
+	public void addParagraph(long id_book,long id_vol,long id_chap, String name_paragraph, long id_user,ServerRequest serv_req) throws NotOwnerException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Book b=(Book) getItem(id_book);
@@ -241,8 +273,11 @@ public class WorkPackage
 		if(vol==null) throw new IllegalArgumentException();
 		Chapter chap=vol.getItem(id_chap);
 		if(chap==null) throw new IllegalArgumentException();
-		Paragraph p=new Paragraph(name_paragraph);
-		chap.add(p);
+		Paragraph p=chap.add(name_paragraph);
+		String query="INSERT INTO BookElement VALUES("+p.getId()+","+p.getTitle()+","+id_rw+","+path_validate+File.separator+p.getPath()+","+path_to_validate+File.separator+p.getPath()+","+state+","+id+");";
+		serv_req.executeQuery(query);
+		query="INSERT INTO Paragraph VALUES("+p.getId()+",NULL,"+id_chap+");";
+		serv_req.executeQuery(query);
 		
 	}
 	/**
@@ -258,7 +293,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the paragraph's ID is not in this WorkPackage
 	 */
-	public void editParagraph(long id_paragraph, String contents, long id_user) throws NotOwnerException
+	public void editParagraph(long id_paragraph, String contents, long id_user,ServerRequest serv_req) throws NotOwnerException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Paragraph p=(Paragraph) getItem(id_paragraph);
@@ -285,7 +320,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage or the volume's ID is not in the book or the chapter's ID is not in the volume or the paragraph's ID is not in the chapter
 	 */
-	public void editParagraph(long id_book,long id_vol,long id_chap,long id_paragraph, String contents, long id_user) throws NotOwnerException
+	public void editParagraph(long id_book,long id_vol,long id_chap,long id_paragraph, String contents, long id_user,ServerRequest serv_req) throws NotOwnerException
 	{
 		
 		if(id_user!=id_rw) throw new NotOwnerException();

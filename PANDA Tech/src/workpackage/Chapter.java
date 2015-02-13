@@ -1,5 +1,6 @@
 package workpackage;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,9 +31,9 @@ public class Chapter extends BookElement
 	 * @param title
 	 *   		   the name of this chapter
 	 */
-	public Chapter(String title)
+	public Chapter(String title, String path)
 	{
-		super(title);
+		super(title,path);
 	}
 	/**
 	 * Returns a Paragraph of this chapter
@@ -51,9 +52,11 @@ public class Chapter extends BookElement
 	 *  		the paragraph to add
 	 * @see Paragraph
 	 */
-	public void add(Paragraph p)
+	public Paragraph add(String title)
 	{
+		Paragraph p=new Paragraph(title,this.getPath()+File.separator+this.getTitle());
 		paragraphs.put(p.getId(), p);
+		return p;
 	}
 
 }

@@ -25,9 +25,9 @@ public class Paragraph extends BookElement
 	 * @param title
 	 * 				the name of this paragraph
 	 */
-	public Paragraph(String title)
+	public Paragraph(String title, String path)
 	{
-		super(title);
+		super(title, path);
 	}
 	/**
 	 * Returns contents of this paragraph

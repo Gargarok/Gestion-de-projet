@@ -29,7 +29,9 @@ public abstract class BookElement {
 	/**
 	 * name of the element
 	 */
+	
 	private String title;
+	private String path;
 	/**
 	 * BookElement's default constructor
 	 * <p>
@@ -46,10 +48,11 @@ public abstract class BookElement {
 	 * @param title
 	 * 			   the name of this element
 	 */
-	protected BookElement(String title){
+	protected BookElement(String title, String path){
 		id=nb;
 		nb++;
 		this.title=title;
+		this.path=path;
 	}
 	/**
 	 * Return the ID of this element
@@ -61,5 +64,7 @@ public abstract class BookElement {
 	 * @return title
 	 */
 	public String getTitle(){return title;}
+	public String getPath(){return path;}
+	public void setPath(){this.path=path;}
 
 }

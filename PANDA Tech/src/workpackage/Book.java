@@ -1,5 +1,7 @@
 package workpackage;
 
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,9 +30,9 @@ public class Book extends BookElement {
 	 * @param title
 	 * 			   the name of this book
 	 */
-	public Book(String title)
+	public Book(String title, String path)
 	{
-		super(title);
+		super(title,path);
 	}
 	/**
 	 * Returns a Volume of this book
@@ -45,13 +47,15 @@ public class Book extends BookElement {
 	}
 	/**
 	 * Add a volume in this book
-	 * @param vol
-	 * 			  the volume to add
+	 * @param title
+	 * 			  the title 's volume to add
 	 * @see Volume
 	 */
-	public void add(Volume vol)
+	public Volume add(String title)
 	{
+		Volume vol=new Volume(title, this.getPath()+File.separator+this.getTitle());
 		volumes.put(vol.getId(), vol);
+		return vol;
 	}
 
 }
