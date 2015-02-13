@@ -67,7 +67,7 @@ public class WorkPackage
 		serv_req.executeQuery(query);
 		query="INSERT INTO BookElement VALUES("+b.getId()+","+b.getTitle()+","+id_rw+","+path_validate+File.separator+b.getPath()+","+path_to_validate+File.separator+b.getPath()+","+state+","+id+");";
 		serv_req.executeQuery(query);
-		query="INSERT INTO Book VALUES("+b.getId()+",NULL);";
+		query="INSERT INTO Book VALUES("+b.getId()+","+id_rw+");";
 		serv_req.executeQuery(query);
 
 		
@@ -163,7 +163,7 @@ public class WorkPackage
 		Volume v=b.add(name_vol);
 		String query="INSERT INTO BookElement VALUES("+v.getId()+","+v.getTitle()+","+id_rw+","+path_validate+File.separator+v.getPath()+","+path_to_validate+File.separator+v.getPath()+","+state+","+id+");";
 		serv_req.executeQuery(query);
-		query="INSERT INTO Volume VALUES("+v.getId()+",NULL,"+id_book+");";
+		query="INSERT INTO Volume VALUES("+v.getId()+","+id_rw+","+id_book+");";
 		serv_req.executeQuery(query);
 		
 	}
@@ -188,7 +188,7 @@ public class WorkPackage
 		Chapter c=vol.add(name_chap);
 		String query="INSERT INTO BookElement VALUES("+c.getId()+","+c.getTitle()+","+id_rw+","+path_validate+File.separator+c.getPath()+","+path_to_validate+File.separator+c.getPath()+","+state+","+id+");";
 		serv_req.executeQuery(query);
-		query="INSERT INTO Chapter VALUES("+c.getId()+",NULL,"+id_vol+");";
+		query="INSERT INTO Chapter VALUES("+c.getId()+","+id_rw+","+id_vol+");";
 		serv_req.executeQuery(query);
 		
 	}
@@ -218,7 +218,7 @@ public class WorkPackage
 		Chapter c=vol.add(name_chap);
 		String query="INSERT INTO BookElement VALUES("+c.getId()+","+c.getTitle()+","+id_rw+","+path_validate+File.separator+c.getPath()+","+path_to_validate+File.separator+c.getPath()+","+state+","+id+");";
 		serv_req.executeQuery(query);
-		query="INSERT INTO Chapter VALUES("+c.getId()+",NULL,"+id_vol+");";
+		query="INSERT INTO Chapter VALUES("+c.getId()+","+id_rw+","+id_vol+");";
 		serv_req.executeQuery(query);
 		
 	}
@@ -243,7 +243,7 @@ public class WorkPackage
 		Paragraph p=chap.add(name_paragraph);
 		String query="INSERT INTO BookElement VALUES("+p.getId()+","+p.getTitle()+","+id_rw+","+path_validate+File.separator+p.getPath()+","+path_to_validate+File.separator+p.getPath()+","+state+","+id+");";
 		serv_req.executeQuery(query);
-		query="INSERT INTO Paragraph VALUES("+p.getId()+",NULL,"+id_chap+");";
+		query="INSERT INTO Paragraph VALUES("+p.getId()+","+id_rw+","+id_chap+");";
 		serv_req.executeQuery(query);
 		
 	}
@@ -276,7 +276,7 @@ public class WorkPackage
 		Paragraph p=chap.add(name_paragraph);
 		String query="INSERT INTO BookElement VALUES("+p.getId()+","+p.getTitle()+","+id_rw+","+path_validate+File.separator+p.getPath()+","+path_to_validate+File.separator+p.getPath()+","+state+","+id+");";
 		serv_req.executeQuery(query);
-		query="INSERT INTO Paragraph VALUES("+p.getId()+",NULL,"+id_chap+");";
+		query="INSERT INTO Paragraph VALUES("+p.getId()+","+id_rw+","+id_chap+");";
 		serv_req.executeQuery(query);
 		
 	}
