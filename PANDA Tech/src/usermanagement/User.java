@@ -1,11 +1,12 @@
 package usermanagement;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import test.ClientConnexion;
 import test.IServerRequest;
-
 
 
 public abstract class User {
@@ -41,7 +42,7 @@ public abstract class User {
 	    query += this.user_id.toString();
 	    query += "';";
 
-	    boolean res = ClientConnexion.iserverrequest.executeQuery(query);
+	    boolean res = ClientConnexion.getIserverrequest().executeQuery(query);
 	    if (!res) {
 	      //System.out.println("Unable to create user");
 	      return "Unable to change your password, sorry.";
@@ -64,7 +65,7 @@ public abstract class User {
 	    query += this.user_id.toString();
 	    query += "';";
 
-	    boolean res = ClientConnexion.iserverrequest.executeQuery(query);
+	    boolean res = ClientConnexion.getIserverrequest().executeQuery(query);
 	    if (!res) {
 	      //System.out.println("Unable to create user");
 	      return "Unable to change your login, sorry.";
@@ -96,7 +97,7 @@ public abstract class User {
     query += this.role_id.toString();
     query += "');";
     
-    boolean res = ClientConnexion.iserverrequest.executeQuery(query);
+    boolean res = ClientConnexion.getIserverrequest().executeQuery(query);
     if (!res) {
       //System.out.println("Unable to create user");
       return "Unable to create user in the database.";
@@ -115,12 +116,33 @@ public abstract class User {
 	    query += this.user_id.toString();
 	    query += "';";
 
-	    boolean res = ClientConnexion.iserverrequest.executeQuery(query);
+	    boolean res = ClientConnexion.getIserverrequest().executeQuery(query);
 	    if (!res) {
 	      //System.out.println("Unable to create user");
 	      return "Unable to delete the user, sorry (it may already exist in the database).";
 	    }
 	    return "User deleted successfully.";
 	  
+  }
+  
+  public static boolean login(String name, String pw, String table_name) {
+	  String query = "SELECT * FROM ";
+	    query += table_name;
+	    query += " WHERE usr_name='";
+	    query += name;
+	    query += "' AND usr_password='";
+	    query += pw;
+	    query += "';"; 
+	    
+	    ArrayList<HashMap<String, Object>> result;
+	    try {
+			result = ClientConnexion.getIserverrequest().executeQueryRusult(query);
+		} catch (RemoteException e) {
+			throw new AssertionError(e);
+		}
+	  if (result.size() == 0) {
+		return false;
+	  }
+	  return true;
   }
 }
