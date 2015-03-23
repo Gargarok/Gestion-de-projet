@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ClientServer.ServerRequest;
+import test.IServerRequest;
+
 
 /**
  * A WorkPackage is a component which contain book elements.
@@ -57,7 +58,7 @@ public class WorkPackage
 	 */
 
 	
-	public WorkPackage(String name, String title, String path_to_validate,String path_validate,ServerRequest serv_req) throws RemoteException
+	public WorkPackage(String name, String title, String path_to_validate,String path_validate,IServerRequest serv_req) throws RemoteException
 	{
 		Book b=new Book(title,name);
 		id=nb;
@@ -90,7 +91,7 @@ public class WorkPackage
 	 * @throws RemoteException 
 	 * 
 	 */
-	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems, String path_to_validate,String path_validate,ServerRequest serv_req) throws RemoteException
+	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems, String path_to_validate,String path_validate,IServerRequest serv_req) throws RemoteException
 	{
 		state="NONVALID";
 		date_create = new Date(System.currentTimeMillis());
@@ -132,7 +133,7 @@ public class WorkPackage
 	 * Validate this WorkPackage
 	 * @throws IOException path_to_validate or path_validate not exist
 	 */
-	public void validate(ServerRequest serv_req) throws IOException{
+	public void validate(IServerRequest serv_req) throws IOException{
 		state="VALID";
 		for(BookElement e:elements.values())
 			Files.copy(new File(path_to_validate+File.separator+e.getTitle()).toPath(),new File(path_validate+File.separator+e.getTitle()).toPath() );
@@ -160,7 +161,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage
 	 */
-	public void addVolume(long id_book,String name_vol, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
+	public void addVolume(long id_book,String name_vol, long id_user,IServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		
 		if(id_user!=id_rw) throw new NotOwnerException();
@@ -187,7 +188,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the volume's ID is not in this WorkPackage
 	 */
-	public void addChapter(long id_vol, String name_chap, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
+	public void addChapter(long id_vol, String name_chap, long id_user,IServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Volume vol=(Volume) getItem(id_vol);
@@ -216,7 +217,7 @@ public class WorkPackage
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage or the volume's ID is not in the book
 	 */
 	
-	public void addChapter(long id_book,long id_vol,String name_chap, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
+	public void addChapter(long id_book,long id_vol,String name_chap, long id_user,IServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Book b=(Book) getItem(id_book);
@@ -244,7 +245,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the chapter's ID is not in this WorkPackage
 	 */
-	public void addParagraph(long id_chap, String name_paragraph, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
+	public void addParagraph(long id_chap, String name_paragraph, long id_user,IServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Chapter chap=(Chapter) getItem(id_chap);
@@ -274,7 +275,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage or the volume's ID is not in the book or the chapter's ID is not in the volume
 	 */
-	public void addParagraph(long id_book,long id_vol,long id_chap, String name_paragraph, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
+	public void addParagraph(long id_book,long id_vol,long id_chap, String name_paragraph, long id_user,IServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Book b=(Book) getItem(id_book);
@@ -303,7 +304,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the paragraph's ID is not in this WorkPackage
 	 */
-	public void editParagraph(long id_paragraph, String contents, long id_user,ServerRequest serv_req) throws NotOwnerException
+	public void editParagraph(long id_paragraph, String contents, long id_user,IServerRequest serv_req) throws NotOwnerException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Paragraph p=(Paragraph) getItem(id_paragraph);
@@ -330,7 +331,7 @@ public class WorkPackage
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage or the volume's ID is not in the book or the chapter's ID is not in the volume or the paragraph's ID is not in the chapter
 	 */
-	public void editParagraph(long id_book,long id_vol,long id_chap,long id_paragraph, String contents, long id_user,ServerRequest serv_req) throws NotOwnerException
+	public void editParagraph(long id_book,long id_vol,long id_chap,long id_paragraph, String contents, long id_user,IServerRequest serv_req) throws NotOwnerException
 	{
 		
 		if(id_user!=id_rw) throw new NotOwnerException();

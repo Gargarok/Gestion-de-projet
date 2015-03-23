@@ -11,7 +11,7 @@ import frames.MainFrame;
 
 public class ClientConnexion {
 
-	private static IServerRequest iserverrequest;
+	public static IServerRequest iserverrequest;
 	
 	public static void main(String[] args) {
 		try{
@@ -44,9 +44,6 @@ public class ClientConnexion {
 	}
 
 
-	public static IServerRequest getIserverrequest() {
-		return iserverrequest;
-	}
 	}
 
 

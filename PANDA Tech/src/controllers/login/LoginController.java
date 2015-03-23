@@ -37,9 +37,9 @@ public class LoginController implements ActionListener {
 		this.frame2=frame2;
 	}
 
-	public Boolean verifyUser(String username, String password){
+	public Boolean verifyUser(){
 		
-		if(username.equals("admin") && password.equals("admin"))
+		if(this.username.getText())
 			return true;
 		else return false;
 		

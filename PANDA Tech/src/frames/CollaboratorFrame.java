@@ -16,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import components.OperationButton;
+import controllers.admin.AddUserController;
+import controllers.login.LoginController;
 
 public class CollaboratorFrame extends JDialog {
 
@@ -32,6 +34,8 @@ public class CollaboratorFrame extends JDialog {
 	public CollaboratorFrame(JPanel owner) {
 
 		initialize();
+		AddUserController auc = new AddUserController();
+		addButton.addMouseListener(auc);
 	}
 
 	/**
