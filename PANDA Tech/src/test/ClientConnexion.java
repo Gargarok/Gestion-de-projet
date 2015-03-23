@@ -44,6 +44,9 @@ public class ClientConnexion {
 	}
 
 
+	public static IServerRequest getIserverrequest() {
+		return iserverrequest;
+	}
 	}
 
 

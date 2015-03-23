@@ -1,9 +1,12 @@
 package usermanagement;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
-import serverinterface.ClientConnexion;
+import test.ClientConnexion;
+import test.IServerRequest;
 
 
 public abstract class User {
@@ -120,5 +123,26 @@ public abstract class User {
 	    }
 	    return "User deleted successfully.";
 	  
+  }
+  
+  public static boolean login(String name, String pw, String table_name) {
+	  String query = "SELECT * FROM ";
+	    query += table_name;
+	    query += " WHERE usr_name='";
+	    query += name;
+	    query += "' AND usr_password='";
+	    query += pw;
+	    query += "';"; 
+	    
+	    ArrayList<HashMap<String, Object>> result;
+	    try {
+			result = ClientConnexion.getIserverrequest().executeQueryRusult(query);
+		} catch (RemoteException e) {
+			throw new AssertionError(e);
+		}
+	  if (result.size() == 0) {
+		return false;
+	  }
+	  return true;
   }
 }
