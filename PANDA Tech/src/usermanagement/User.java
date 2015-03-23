@@ -1,6 +1,9 @@
 package usermanagement;
 
+import java.rmi.RemoteException;
 import java.util.UUID;
+
+import serverinterface.ClientConnexion;
 
 
 public abstract class User {
@@ -10,24 +13,24 @@ public abstract class User {
   private String login;
   private String password;
   private UUID role_id;
-  private ServerRequest server;
+  
   
   
   public abstract String create();
   
-  public User(UUID user_id, String first_name, String second_name, String login, String password, UUID role_id, ServerRequest server) {
+  public User(UUID user_id, String first_name, String second_name, String login, String password, UUID role_id) {
 	this.user_id = user_id;
 	this.first_name = first_name;
 	this.second_name = second_name;
 	this.login = login;
 	this.password = password;
-	this.server = server;
   }
   
   /**
    * Change the user's password.
+ * @throws RemoteException 
    */
-  protected String changePassword(String newPassword, String table_name) {
+  protected String changePassword(String newPassword, String table_name) throws RemoteException {
     String query = "UPDATE ";
 	    query += table_name;
 	    query += " SET usr_password='";
@@ -36,7 +39,7 @@ public abstract class User {
 	    query += this.user_id.toString();
 	    query += "';";
 
-	    boolean res = this.server.executeQuery(query);
+	    boolean res = ClientConnexion.getIserverrequest().executeQuery(query);
 	    if (!res) {
 	      //System.out.println("Unable to create user");
 	      return "Unable to change your password, sorry.";
@@ -48,8 +51,9 @@ public abstract class User {
 
   /**
    * Change the user's login.
+ * @throws RemoteException 
    */
-  protected String changeLogin(String table_name, String newlogin) {
+  protected String changeLogin(String table_name, String newlogin) throws RemoteException {
     String query = "UPDATE ";
 	    query += table_name;
 	    query += " SET usr_login='";
@@ -58,7 +62,7 @@ public abstract class User {
 	    query += this.user_id.toString();
 	    query += "';";
 
-	    boolean res = this.server.executeQuery(query);
+	    boolean res = ClientConnexion.getIserverrequest().executeQuery(query);
 	    if (!res) {
 	      //System.out.println("Unable to create user");
 	      return "Unable to change your login, sorry.";
@@ -69,8 +73,9 @@ public abstract class User {
   
   /**
   Creates the given user in the database given in parameters.
+ * @throws RemoteException 
   */
-  protected String databaseSave(String database_name, String id_name) {
+  protected String databaseSave(String database_name, String id_name) throws RemoteException {
     String query = "INSERT INTO ";
     query += database_name;
     query += "(usr_id, usr_name,usr_first_name,usr_login,usr_password,usr_rl_id,";
@@ -89,7 +94,7 @@ public abstract class User {
     query += this.role_id.toString();
     query += "');";
     
-    boolean res = this.server.executeQuery(query);
+    boolean res = ClientConnexion.getIserverrequest().executeQuery(query);
     if (!res) {
       //System.out.println("Unable to create user");
       return "Unable to create user in the database.";
@@ -99,15 +104,16 @@ public abstract class User {
   
   /**
    * Delete the given user from the database (only if he does exists, of course).
+ * @throws RemoteException 
    */
-  protected String delete(String table_name) {
+  protected String delete(String table_name) throws RemoteException {
     String query = "DELETE FROM ";
 	    query += table_name;
 	    query += " WHERE usr_id='";
 	    query += this.user_id.toString();
 	    query += "';";
 
-	    boolean res = this.server.executeQuery(query);
+	    boolean res = ClientConnexion.getIserverrequest().executeQuery(query);
 	    if (!res) {
 	      //System.out.println("Unable to create user");
 	      return "Unable to delete the user, sorry (it may already exist in the database).";

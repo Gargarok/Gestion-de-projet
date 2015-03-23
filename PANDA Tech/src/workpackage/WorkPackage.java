@@ -3,12 +3,15 @@ package workpackage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.rmi.RemoteException;
 import java.security.acl.NotOwnerException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ClientServer.ServerRequest;
 
 /**
  * A WorkPackage is a component which contain book elements.
@@ -50,10 +53,11 @@ public class WorkPackage
 	 * <p>
 	 * While WorkPackage's construction, a book is created in this WorkPackage
 	 * </p>
+	 * @throws RemoteException 
 	 */
 
 	
-	public WorkPackage(String name, String title, String path_to_validate,String path_validate,ServerRequest serv_req)
+	public WorkPackage(String name, String title, String path_to_validate,String path_validate,ServerRequest serv_req) throws RemoteException
 	{
 		Book b=new Book(title,name);
 		id=nb;
@@ -83,9 +87,10 @@ public class WorkPackage
 	 * 				the name of this WorkPackage
 	 * @param id_elems
 	 * 				   IDs of elements contained in the WorkPackage wp which will be created in this WorkPackage
+	 * @throws RemoteException 
 	 * 
 	 */
-	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems, String path_to_validate,String path_validate,ServerRequest serv_req)
+	public WorkPackage(String name, WorkPackage wp,List<Long> id_elems, String path_to_validate,String path_validate,ServerRequest serv_req) throws RemoteException
 	{
 		state="NONVALID";
 		date_create = new Date(System.currentTimeMillis());
@@ -151,10 +156,11 @@ public class WorkPackage
 	 * 					ID of the user who add the volume
 	 * 
 	 * @throws NotOwnerException if the user who add the volume is not allowed to modify this WorkPackage
+	 * @throws RemoteException 
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage
 	 */
-	public void addVolume(long id_book,String name_vol, long id_user,ServerRequest serv_req) throws NotOwnerException
+	public void addVolume(long id_book,String name_vol, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		
 		if(id_user!=id_rw) throw new NotOwnerException();
@@ -177,10 +183,11 @@ public class WorkPackage
 	 * 				  ID of the user who add the chapter
 	 * 
 	 * @throws NotOwnerException if the user who add the chapter is not allowed to modify this WorkPackage
+	 * @throws RemoteException 
 	 * 
 	 * @throws IllegalArgumentException if the volume's ID is not in this WorkPackage
 	 */
-	public void addChapter(long id_vol, String name_chap, long id_user,ServerRequest serv_req) throws NotOwnerException
+	public void addChapter(long id_vol, String name_chap, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Volume vol=(Volume) getItem(id_vol);
@@ -204,11 +211,12 @@ public class WorkPackage
 	 * 				  ID of the user who add the chapter
 	 * 
 	 * @throws NotOwnerException if the user who add the chapter is not allowed to modify this WorkPackage
+	 * @throws RemoteException 
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage or the volume's ID is not in the book
 	 */
 	
-	public void addChapter(long id_book,long id_vol,String name_chap, long id_user,ServerRequest serv_req) throws NotOwnerException
+	public void addChapter(long id_book,long id_vol,String name_chap, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Book b=(Book) getItem(id_book);
@@ -232,10 +240,11 @@ public class WorkPackage
 	 * 				  ID of the user who add the paragraph
 	 * 
 	 * @throws NotOwnerException if the user who add the paragraph is not allowed to modify this WorkPackage
+	 * @throws RemoteException 
 	 * 
 	 * @throws IllegalArgumentException if the chapter's ID is not in this WorkPackage
 	 */
-	public void addParagraph(long id_chap, String name_paragraph, long id_user,ServerRequest serv_req) throws NotOwnerException
+	public void addParagraph(long id_chap, String name_paragraph, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Chapter chap=(Chapter) getItem(id_chap);
@@ -261,10 +270,11 @@ public class WorkPackage
 	 *       		  ID of the user who add the paragraph
 	 *       
 	 * @throws NotOwnerException if the user who add the paragraph is not allowed to modify this WorkPackage
+	 * @throws RemoteException 
 	 * 
 	 * @throws IllegalArgumentException if the book's ID is not in this WorkPackage or the volume's ID is not in the book or the chapter's ID is not in the volume
 	 */
-	public void addParagraph(long id_book,long id_vol,long id_chap, String name_paragraph, long id_user,ServerRequest serv_req) throws NotOwnerException
+	public void addParagraph(long id_book,long id_vol,long id_chap, String name_paragraph, long id_user,ServerRequest serv_req) throws NotOwnerException, RemoteException
 	{
 		if(id_user!=id_rw) throw new NotOwnerException();
 		Book b=(Book) getItem(id_book);
